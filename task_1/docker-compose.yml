@@ -1,0 +1,41 @@
+version: '3'
+services:
+  db:
+    container_name: db
+    build:
+      context: .
+      dockerfile: Dockerfile_db
+      args:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+    restart: always
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+    ports:
+    - "5432:5432"
+    volumes:
+    - /var/run/postgresql:/var/run/postgresql
+  tracker:
+    container_name: tracker
+    privileged: true
+    build:
+      context: .
+      args:
+        - POSTGRES_DB=${POSTGRES_DB}
+        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_HOST=${POSTGRES_HOST}
+    ports:
+      - "5000:5000"
+    environment:
+      POSTGRES_DB: "${POSTGRES_NAME}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_HOST: "${POSTGRES_HOST}"
+    links:
+      - db
+    depends_on:
+      - db
