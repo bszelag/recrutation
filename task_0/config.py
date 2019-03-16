@@ -1,0 +1,14 @@
+import os
+
+DB_HOST = os.getenv("DB_HOST")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_NAME = os.getenv("DB_NAME")
+
+DEST_DB_HOST = os.getenv("DEST_DB_HOST")
+DEST_DB_USER = os.getenv("DEST_DB_USER")
+DEST_DB_PASSWORD = os.getenv("DEST_DB_PASSWORD")
+DEST_DB_NAME = os.getenv("DEST_DB_NAME")
+
+SAVE_TITLES_TO_CSV = """SELECT * INTO OUTFILE '/tmp/titles.csv' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\n' FROM titles;"""   # noqa: E501, E262
+LOAD_TITLES_FROM_CSV = """LOAD DATA INFILE '/tmp/titles.csv' INTO TABLE titles FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\n';"""  # noqa: E501, E262

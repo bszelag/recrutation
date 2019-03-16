@@ -1,0 +1,1 @@
+GET_ALL_TITLES_QUERY = "SELECT * FROM titles"

@@ -6,7 +6,7 @@ venv:
 	pip install -r requirements.txt
 
 install:
-	pip install -r -q requirements.txt
+	pip install -q -r requirements.txt
 
 test:
 	pytest -v tests/
