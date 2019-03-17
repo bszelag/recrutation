@@ -9,19 +9,23 @@ def create_item(req, resp):
     if req.content_length:
         try:
             cart_id = get_card_id(req, resp)
-        except:
+        except:                                                                         # noqa
             database_connector.connection.rollback()
             return falcon.HTTP_500
 
         data = json.load(req.stream)
         try:
-            if database_connector.get_item(data['external_id'], cart_id):
-                database_connector.update_item(data['external_id'], data['name'], data['value'],
+            external_id, name, value = get_body_data(data)
+        except KeyError:
+            return falcon.HTTP_400
+        try:
+            if database_connector.get_item(external_id, cart_id):
+                database_connector.update_item(external_id, name, value,
                                                cart_id)
             else:
-                database_connector.create_item(data['external_id'], data['name'], data['value'],
+                database_connector.create_item(external_id, name, value,
                                                cart_id)
-        except:
+        except:                                                                         # noqa
             database_connector.connection.rollback()
             return falcon.HTTP_500
 
@@ -40,3 +44,10 @@ def get_card_id(req, resp):
     resp.set_cookie(name='cart_id', value=cart_id, max_age=259200)
     database_connector.commit_changes()
     return cart_id
+
+
+def get_body_data(data):
+    name = data.get("name", None)
+    value = data.get("value", None)
+    external_id = data['external_id']
+    return external_id, name, value
